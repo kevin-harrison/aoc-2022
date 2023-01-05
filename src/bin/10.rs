@@ -26,7 +26,42 @@ pub fn part_one(input: &str) -> Option<i32> {
 }
 
 
-pub fn part_two(input: &str) -> Option<u32> {
+fn advance_cycle(cycle: &mut i32, x: i32, crt: &mut String) {
+    if (x - ((*cycle - 1) % 40)).abs() <= 1 {
+        crt.push('#'); 
+    }
+    else {
+        crt.push('.');
+    }
+    *cycle += 1;
+    if ((*cycle - 1) % 40) == 0 {crt.push('\n')}
+}
+
+pub fn part_two(input: &str) -> Option<i32> {
+    let input = &input[..input.len()-1];
+    let mut x: i32 = 1;
+    let mut cycle = 1;
+    let mut crt = String::new();
+
+    for line in input.split("\n") {
+        //println!("{:<9} cycle {}: x={}", line, cycle, x);
+
+        // start of cycle
+        let operation = &line[..4];
+        match operation {
+            "noop" => {
+                advance_cycle(&mut cycle, x, &mut crt);
+            },
+            "addx" => {
+                let operand = line[5..].parse::<i32>().ok()?;
+                advance_cycle(&mut cycle, x, &mut crt);
+                advance_cycle(&mut cycle, x, &mut crt);
+                x += operand;
+            },
+            _ => panic!("Unsupported operation")
+        }
+    }
+    println!("{}", crt);
     None
 }
 
