@@ -6,8 +6,7 @@ pub fn part_one(input: &str) -> Option<u32> {
         if line == "" {
             elf_calories.push(calories);
             calories = 0;
-        }
-        else {
+        } else {
             calories += line.parse::<u32>().unwrap();
         }
     }
@@ -24,8 +23,7 @@ pub fn part_two(input: &str) -> Option<u32> {
         if line == "" {
             elf_calories.push(calories);
             calories = 0;
-        }
-        else {
+        } else {
             calories += line.parse::<u32>().unwrap();
         }
     }
