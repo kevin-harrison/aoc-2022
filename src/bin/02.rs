@@ -1,6 +1,5 @@
-use std::str::FromStr;
 use self::Move::*;
-
+use std::str::FromStr;
 
 #[derive(PartialEq, Eq)]
 pub enum Move {
@@ -43,34 +42,40 @@ pub struct ParseMoveError;
 impl FromStr for Move {
     type Err = ParseMoveError;
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-         match s {
-         "A" => Ok(Rock),
-         "B" => Ok(Paper),
-         "C" => Ok(Scissors),
-         "X" => Ok(Rock),
-         "Y" => Ok(Paper),
-         "Z" => Ok(Scissors),
-         _ => Err(ParseMoveError)
-      }
+        match s {
+            "A" => Ok(Rock),
+            "B" => Ok(Paper),
+            "C" => Ok(Scissors),
+            "X" => Ok(Rock),
+            "Y" => Ok(Paper),
+            "Z" => Ok(Scissors),
+            _ => Err(ParseMoveError),
+        }
     }
 }
-
 
 pub fn part_one(input: &str) -> Option<u32> {
     let mut score: u32 = 0;
 
     for line in input.split("\n") {
-        if line.len() == 0 {break;}
+        if line.len() == 0 {
+            break;
+        }
         let (opponents_str, response_str) = (&line[0..1], &line[2..3]);
         let opponents_move = Move::from_str(opponents_str).unwrap();
         let response_move = Move::from_str(response_str).unwrap();
-        
-        if response_move.beats() == opponents_move {score += 6} // Win
-        else if opponents_move.beats() != response_move {score += 3} // Draw
+
+        if response_move.beats() == opponents_move {
+            // Win
+            score += 6
+        } else if opponents_move.beats() != response_move {
+            // Draw
+            score += 3
+        }
         match response_move {
             Rock => score += 1,
             Paper => score += 2,
-            Scissors => score += 3
+            Scissors => score += 3,
         }
     }
     Some(score)
@@ -80,21 +85,29 @@ pub fn part_two(input: &str) -> Option<u32> {
     let mut score: u32 = 0;
 
     for line in input.split("\n") {
-        if line.len() == 0 {break;}
+        if line.len() == 0 {
+            break;
+        }
         let (opponents_str, response_str) = (&line[0..1], &line[2..3]);
         let opponents_move = Move::from_str(opponents_str).unwrap();
-        
+
         let response_move = match response_str {
             "X" => opponents_move.beats(),
-            "Y" => {score += 3; opponents_move},
-            "Z" => {score += 6; opponents_move.beaten_by()},
-            _ => Rock // should never happen
+            "Y" => {
+                score += 3;
+                opponents_move
+            }
+            "Z" => {
+                score += 6;
+                opponents_move.beaten_by()
+            }
+            _ => Rock, // should never happen
         };
 
         match response_move {
             Rock => score += 1,
             Paper => score += 2,
-            Scissors => score += 3
+            Scissors => score += 3,
         }
     }
     Some(score)
