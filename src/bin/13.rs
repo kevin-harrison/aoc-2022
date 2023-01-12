@@ -95,17 +95,12 @@ impl Ord for Packet {
                 return self.cmp(&Packet::List(vec![Packet::Value(*a)]))
             }
             (Packet::List(s), Packet::List(o)) => {
-                let mut i = 0;
-                let mut j = 0;
-                while i < s.len() && j < o.len() {
-                    let ord = s[i].cmp(&o[j]);
-                    if ord != Ordering::Equal {
-                        return ord;
+                for (a, b) in s.iter().zip(o) {
+                    match a.cmp(b) {
+                        Ordering::Equal => (),
+                        lt_or_gt => return lt_or_gt
                     }
-                    i += 1;
-                    j += 1;
                 }
-
                 return s.len().cmp(&o.len());
             }
         }
